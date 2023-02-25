@@ -35,7 +35,8 @@ function doLog(level: 'DEBUG' | 'INFO' | 'WARN' | 'ERROR', ...args: any[]) {
   const strs = args.map(arg => (typeof arg === 'string' || isError(arg) ? arg : JSON.stringify(arg)))
 
   const line = `${getTime()} - ${level} - ${strs.join(' | ')}\n`
-  fs.appendFile('./logs/backend.log', line, err => {
-    if (err) console.log('FATAL: cannot write to log file')
-  })
+  console.log(line)
+  // fs.appendFile('./logs/backend.log', line, err => {
+  //   if (err) console.log('FATAL: cannot write to log file')
+  // })
 }

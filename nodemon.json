@@ -1,5 +1,6 @@
 {
   "restartable": "rs",
+  "include": ["./src/**/*"],
   "ignore": [".git", "node_modules/**/node_modules"],
   "verbose": true,
   "execMap": {

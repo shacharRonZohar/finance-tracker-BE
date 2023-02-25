@@ -1,5 +1,5 @@
-import { userService } from './user.service'
-import { logger } from '../../services/logger.service'
+import { userService } from './user.service.js'
+import { logger } from '../../services/logger.service.js'
 import type { Request, Response } from 'express'
 
 export async function getUser(req: Request, res: Response) {

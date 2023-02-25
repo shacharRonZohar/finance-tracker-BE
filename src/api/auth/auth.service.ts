@@ -1,8 +1,8 @@
 import Cryptr from 'cryptr'
 import bcrypt from 'bcrypt'
-import userService from '../user/user.service'
-import { logger } from '../../services/logger.service'
-import { NewUser, User } from '../../models/User'
+import { userService } from '../user/user.service.js'
+import { logger } from '../../services/logger.service.js'
+import type { CleanUser, NewUser, User } from '../../models/User'
 
 const cryptr = new Cryptr(process.env.SECRET1 || 'Secret-1234')
 
@@ -21,10 +21,10 @@ async function login({ username, password }: NewUser) {
   // TODO: un-comment for real login
   // const match = await bcrypt.compare(password, user.password)
   // if (!match) return Promise.reject('Invalid username or password')
+  const { password: userPass, ...userWithoutPassword } = user
 
-  delete user.password
-  user._id = user._id.toString()
-  return user
+  // user._id = user._id.toString()
+  return userWithoutPassword
 }
 
 async function signup({ username, password }: NewUser) {
@@ -40,7 +40,7 @@ async function signup({ username, password }: NewUser) {
   return userService.add({ username, password: hash })
 }
 
-function getLoginToken(user: User) {
+function getLoginToken(user: CleanUser) {
   const userInfo = { _id: user._id, fullname: user.username }
   return cryptr.encrypt(JSON.stringify(userInfo))
 }

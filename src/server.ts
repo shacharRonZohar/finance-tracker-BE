@@ -4,10 +4,10 @@ import path from 'path'
 import cookieParser from 'cookie-parser'
 import { createServer } from 'http'
 
-import { authRouter } from './api/auth/auth.routes'
-import { userRouter } from './api/user/user.routes'
+import { authRouter } from './api/auth/auth.routes.js'
+import { userRouter } from './api/user/user.routes.js'
 
-import { logger } from './services/logger.service'
+import { logger } from './services/logger.service.js'
 
 const app = express()
 const http = createServer(app)
@@ -45,7 +45,7 @@ app.use('/api/user', userRouter)
 app.get('/**', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'))
 })
-
+console.log('hi')
 const port = process.env.PORT || 3030
 http.listen(port, () => {
   logger.info('Server is running on port: ' + port)

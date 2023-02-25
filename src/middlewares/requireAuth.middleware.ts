@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { authService } from '../api/auth/auth.service'
+import { authService } from '../api/auth/auth.service.js'
 import { User } from '../models/User'
 
 interface RequestWithUser extends Request {

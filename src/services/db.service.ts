@@ -1,6 +1,6 @@
-import { MongoClient } from 'mongodb'
-import { config } from '../../config'
-import { logger } from './logger.service'
+import { type Document, MongoClient } from 'mongodb'
+import { config } from '../../config/index.js'
+import { logger } from './logger.service.js'
 
 import type { Db } from 'mongodb'
 
@@ -10,10 +10,10 @@ export const dbService = {
 
 let dbConn: Db | null = null
 
-async function getCollection(collectionName: string) {
+async function getCollection<T extends Document>(collectionName: string) {
   try {
     const db = await connect()
-    const collection = await db.collection(collectionName)
+    const collection = await db.collection<T>(collectionName)
     return collection
   } catch (err) {
     logger.error('Failed to get Mongo collection', err)
@@ -24,7 +24,7 @@ async function getCollection(collectionName: string) {
 async function connect() {
   if (dbConn) return dbConn
   try {
-    const client = await MongoClient.connect(config.dbURL, { useNewUrlParser: true, useUnifiedTopology: true })
+    const client = await MongoClient.connect(config.dbURL)
     const db = client.db(config.dbName)
     dbConn = db
     return db
