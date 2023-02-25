@@ -20,7 +20,7 @@ async function getByMonth({ user, year, month }: { user: User; year: number; mon
   try {
     console.log('getByMonth:', year, month, user._id)
     const collection = await _getYearDataCollection()
-    const [{ monthData }] = await collection
+    const [{ monthData } = { monthData: null }] = await collection
       // .find()
       .aggregate([
         {
@@ -49,7 +49,7 @@ async function getByMonth({ user, year, month }: { user: User; year: number; mon
     if (!monthData) {
       console.log('No monthData found, creating new monthData')
       const demoData = _getDemoData()
-      // await collection.insertMany(demoData as YearData[])
+      await collection.insertMany(demoData as YearData[])
     }
     console.log('monthData:', monthData)
     return monthData
@@ -63,7 +63,7 @@ function _getDemoData(): NewYearData[] {
   return [
     {
       userId: new ObjectId('63fa32804e5ce2b8baa62274'),
-      year: 2021,
+      year: 2023,
       months: [
         {
           id: '1',
@@ -83,13 +83,13 @@ function _getDemoData(): NewYearData[] {
         {
           id: '2',
           month: 2,
-          budget: 1000,
+          budget: 10100,
           expneses: {
             recurring: [
               {
                 id: '1',
                 name: 'Rent',
-                price: 1000,
+                price: 5000,
               },
             ],
             nonRecurring: [],
