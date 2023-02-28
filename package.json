@@ -6,6 +6,7 @@
   "main": "src/server.ts",
   "scripts": {
     "start": "node server.js",
+    "build": "tsc",
     "server:dev": "nodemon",
     "server:prod": "set NODE_ENV=production&&node dist/src/server.js"
   },
