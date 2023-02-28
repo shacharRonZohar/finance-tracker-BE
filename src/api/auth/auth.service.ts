@@ -18,9 +18,8 @@ async function login({ username, password }: NewUser) {
 
   const user = await userService.getByUsername(username)
   if (!user) throw new Error('Invalid username or password')
-  // TODO: un-comment for real login
-  // const match = await bcrypt.compare(password, user.password)
-  // if (!match) return Promise.reject('Invalid username or password')
+  const match = await bcrypt.compare(password, user.password)
+  if (!match) return Promise.reject('Invalid username or password')
   const { password: userPass, ...userWithoutPassword } = user
 
   // user._id = user._id.toString()

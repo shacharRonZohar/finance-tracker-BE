@@ -5,9 +5,12 @@ import type { NewUser, User } from '../../models/User'
 import type { NewYearData, YearData } from '../../models/financial.js'
 import { authService } from '../auth/auth.service.js'
 import { getLoggedInUser } from '../auth/auth.controller.js'
+import { userService } from '../user/user.service.js'
+import { makeId } from '../../services/util.service.js'
 
 export const monthDataService = {
   getByMonth,
+  addYearData,
   // query,
   // getById,
   // getByUsername,
@@ -20,13 +23,14 @@ async function getByMonth({ user, year, month }: { user: User; year: number; mon
   try {
     console.log('getByMonth:', year, month, user._id)
     const collection = await _getYearDataCollection()
+    console.log(user)
     const [{ monthData } = { monthData: null }] = await collection
       // .find()
       .aggregate([
         {
           $match: {
             year,
-            userId: user._id,
+            userId: new ObjectId(user._id),
           },
         },
         {
@@ -46,16 +50,49 @@ async function getByMonth({ user, year, month }: { user: User; year: number; mon
       ])
       .toArray()
 
-    if (!monthData) {
-      console.log('No monthData found, creating new monthData')
-      const demoData = _getDemoData()
-      await collection.insertMany(demoData as YearData[])
-    }
+    // if (!monthData) {
+    //   console.log('No monthData found, creating new monthData')
+    //   const demoData = _getDemoData()
+    //   await collection.insertMany(demoData as YearData[])
+    // }
     console.log('monthData:', monthData)
     return monthData
   } catch (err) {
     logger.error('Failed to get monthData with data:', year, month, 'with err:', err)
     throw err
+  }
+}
+
+async function addYearData(userId: ObjectId, year?: number) {
+  try {
+    const yearData = _getEmptyYearData(userId, year)
+    yearData.months.push(_getEmptyMonthData())
+    await dbService.addToCollection('yearData', yearData)
+    console.log('yearData:', yearData)
+    return yearData
+  } catch (err) {
+    logger.error('Failed to add yearData with data:', year, 'with err:', err)
+    throw err
+  }
+}
+
+function _getEmptyYearData(userId: ObjectId, year = new Date().getFullYear()): NewYearData {
+  return {
+    year,
+    userId,
+    months: [],
+  }
+}
+
+function _getEmptyMonthData(month = new Date().getMonth()): NewYearData['months'][0] {
+  return {
+    id: makeId(),
+    month,
+    budget: 0,
+    expneses: {
+      recurring: [],
+      nonRecurring: [],
+    },
   }
 }
 

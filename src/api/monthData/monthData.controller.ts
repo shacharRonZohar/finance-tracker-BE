@@ -13,13 +13,13 @@ export async function getMonthData(req: Request, res: Response) {
     // console.log('req.body:', req.body)
     const year = +req.params.year
     const month = +req?.query?.month! || 0
-    console.log('req.body:', req.query)
-    // const user = authService.validateToken(req.cookies.loginToken)!
-    const user: User = {
-      _id: new ObjectId('63fa32804e5ce2b8baa62274'),
-      username: 'demo',
-      password: 'demo',
-    }
+    const user = authService.validateToken(req.cookies.loginToken)
+    if (!user) throw new Error('No user found')
+    // const user: User = {
+    //   _id: new ObjectId('63fa32804e5ce2b8baa62274'),
+    //   username: 'demo',
+    //   password: 'demo',
+    // }
 
     const monthData = await monthDataService.getByMonth({ user, month, year })
     // const monthData = await monthDataService.getByMonth(req.body)
