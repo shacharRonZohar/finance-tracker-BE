@@ -4,6 +4,9 @@
   "description": "production ready server",
   "type": "module",
   "main": "src/server.ts",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "start": "node server.js",
     "build": "tsc",
